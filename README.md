@@ -5,8 +5,5 @@ Desenvolvido no Bootcamp da Rocketseat, o GoBarber é uma aplicação de agendam
 Utilizamos o React Native para a criação da aplicação.
 
 ---
-<video autoplay>
-    <source src="video.mov" type="video/mp4">
-</vide>
 <p></p>
 Criado por Lucas Soares

@@ -51,3 +51,7 @@ export const CreateAccountButtonText = styled.Text`
     font-size: 18px;
     font-family: "RobotoSlab-Regular";
 `;
+
+export const Form = styled.View`
+    width: 100%;
+`;

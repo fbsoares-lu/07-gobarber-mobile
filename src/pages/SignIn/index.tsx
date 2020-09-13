@@ -1,8 +1,11 @@
 import React, {useCallback, useRef} from 'react';
-import {Image, KeyboardAvoidingView, View, ScrollView, Platform, TextInput} from 'react-native';
+import {Image, KeyboardAvoidingView, View, ScrollView, Platform, TextInput, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Form} from '@unform/mobile';
 import {FormHandles} from '@unform/core';
+import * as Yup from 'yup';
+
+import getValidationErrors from '../../utils/getValidationErrors';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -10,14 +13,51 @@ import Button from '../../components/Button';
 import {Container, Title, ForgotPassword, ForgotPasswordText, CreateAccountButton, CreateAccountButtonText, Icon} from './styles';
 
 import logoImg from '../../assets/logo.png';
+
+interface SignInFormData {
+    email: string;
+    password: string;
+}
+
 const SignIn: React.FC = () => {
     const formRef = useRef<FormHandles>(null);
     const passwordInputRef = useRef<TextInput>(null);
     const navigation = useNavigation();
 
-    const handlerSignIn = useCallback((data: object) => {
-        console.log(data);
-    }, [])
+    const handlerSignIn = useCallback(
+        async (data: SignInFormData) => {
+            try {
+                formRef.current?.setErrors({});
+
+                const schema = Yup.object().shape({
+                    email: Yup.string()
+                        .required('E-mail obrigatório')
+                        .email('E-mail inválido'),
+                    password: Yup.string().min(6, 'Mínimo 6 caracteres'),
+                });
+                await schema.validate(data, {
+                    abortEarly: false,
+                });
+                // await signIn({
+                //     email: data.email,
+                //     password: data.password,
+                // });
+
+                // history.push('/dashboard');
+            } catch (err) {
+                if (err instanceof Yup.ValidationError) {
+                    const errors = getValidationErrors(err);
+                    formRef.current?.setErrors(errors);
+                    return;
+                }
+                Alert.alert(
+                    'Error na autenticação',
+                    'Ocorreu um erro ao fazer login, cheque as credenciais.'
+                );
+            }
+        },
+        [],
+    );
     return (
         <>
             <KeyboardAvoidingView

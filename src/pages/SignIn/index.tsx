@@ -26,7 +26,8 @@ const SignIn: React.FC = () => {
     const passwordInputRef = useRef<TextInput>(null);
     const navigation = useNavigation();
 
-    const { signIn } = useAuth();
+    const { signIn, user } = useAuth();
+    console.log(user);
 
     const handlerSignIn = useCallback(
         async (data: SignInFormData) => {
